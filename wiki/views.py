@@ -31,8 +31,22 @@ class PageDetailView(DetailView):
         """ Returns a specific wiki page by slug. """
         page = self.get_queryset().get(slug__iexact=slug)
         return render(request, 'page.html', {
-            'page': page
+            'page': page,
+            'form': PageForm()
         })
+
+    # Edit
+    def post(self, request, slug):
+        # Allow eidt of page info
+        form = PageForm(request.POST)
+        page = self.get_queryset().get(slug__iexact=slug)
+        # Get page info
+        page.title = request.POST['title']
+        page.author = request.user
+        page.content = request.POST['content']
+        page.save
+
+        return HttpResponseRedirect(reverse('wiki:wiki-details-page'))
 
 
 class PageCreateView(CreateView):
@@ -44,11 +58,10 @@ class PageCreateView(CreateView):
     def post(self, request, *args, **kwargs):
         form = PageForm(request.POST)
         # If true, save data and use logged-in user as page author --> then redirect to detail view for newly created page object
-        # use reverse function to return path
         if form.is_valid():
-            wiki = form.save()
-            wiki.save()
-            return HttpResponseRedirect(reverse('wiki-details-page'))
+            page = form.save()
+            # use reverse function to return path
+            return HttpResponseRedirect(reverse('wiki:wiki-details-page', args=[page.slug]))
         return render(request, 'create.html', {'form': form})
 
         # if false, display errors in templates
