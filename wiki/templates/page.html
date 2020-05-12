@@ -8,6 +8,20 @@
       <p>{{ page.content|linebreaksbr }}</p>
       <hr>
       <a href="{% url 'wiki:wiki-list-page' %}">Back to List</a>
+      
+      <h3>Edit This Wiki Below</h3>
+      <!-- Edit Form if user authenticated -->
+      {% if request.user.is_authenticated %}
+ 
+      <form method="POST">
+          {{ form.as_p }}
+          {% csrf_token %}
+          <button class="btn btn-primary" type="submit">Edit Wiki</button>
+      </form>
+
+  
+      {% endif %}
+
     </div>
   </div>
 {% endblock %}

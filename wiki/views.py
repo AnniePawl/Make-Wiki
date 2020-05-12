@@ -32,21 +32,21 @@ class PageDetailView(DetailView):
         page = self.get_queryset().get(slug__iexact=slug)
         return render(request, 'page.html', {
             'page': page,
+            # Render a page edit form below details ?
             'form': PageForm()
         })
 
     # Edit
     def post(self, request, slug):
-        # Allow eidt of page info
+        # Allow edit of page info
         form = PageForm(request.POST)
         page = self.get_queryset().get(slug__iexact=slug)
-        # Get page info
-        page.title = request.POST['title']
-        page.author = request.user
-        page.content = request.POST['content']
-        page.save
-
-        return HttpResponseRedirect(reverse('wiki:wiki-details-page'))
+        # Check if form is valid
+        if form.is_valid():
+            # save data
+            page = form.save()
+        # Redirect back to detail view
+        return HttpResponseRedirect(reverse('wiki:wiki-details-page', args=[page.slug]))
 
 
 class PageCreateView(CreateView):
