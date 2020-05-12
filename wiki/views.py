@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
+from django.views.generic import CreateView
+
 
 from wiki.models import Page
-
+from .forms import PageForm
 
 class PageListView(ListView):
     """ Renders a list of all Pages. """
@@ -26,3 +28,22 @@ class PageDetailView(DetailView):
         return render(request, 'page.html', {
           'page': page
         })
+
+class PageCreateView(CreateView):
+    # Render template to display pageForm instance
+    def get(self, request, *args, **kwargs):
+      context = {'form': PageForm()}
+      return render(request, 'create.html', context)
+
+    def post(self, request, *args, **kwargs):
+      form = PageForm(request.POST)
+      # If true, save data and use logged-in user as page author --> then redirect to detail view for newly created page object 
+      # use reverse function to return path 
+      if form.is_valid():
+          wiki = form.save()
+          wiki.save()
+          return HttpReponseRedirect(reverse_lazy('detail-page'))
+      return render(request, 'create.html', {'form': form})
+
+      # if false, display errors in templates
+    
