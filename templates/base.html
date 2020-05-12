@@ -10,7 +10,7 @@
   </head>
   <body>
     <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-      <a class="navbar-brand" href="{% url 'wiki-list-page' %}"><i class="fas fa-fw fa-book"></i> makewiki</a>
+      <a class="navbar-brand" href="{% url 'wiki:wiki-list-page' %}"><i class="fas fa-fw fa-book"></i> makewiki</a>
       <form class="form-inline ml-auto">
 
         {% if request.user.is_authenticated %}
@@ -19,7 +19,8 @@
 
         {% if request.user.is_authenticated %}
         <!-- Hide New Page for unauthenticated users -->
-        <a href="/wiki/templates/create.html" class="btn btn-success ml-4">New Page</a>
+        <a href="create/" class="btn btn-success ml-4">New Page</a>
+      
         <!-- Hide Log Out for unauthenitcated Users -->
         <a href="/accounts/logout" class="btn btn-danger ml-2">Log Out</a>
         {% endif %}
