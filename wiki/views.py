@@ -40,13 +40,14 @@ class PageDetailView(DetailView):
     def post(self, request, slug):
         # Allow edit of page info
         form = PageForm(request.POST)
-        page = self.get_queryset().get(slug__iexact=slug)
         # Check if form is valid
         if form.is_valid():
             # save data
             page = form.save()
-        # Redirect back to detail view
-        return HttpResponseRedirect(reverse('wiki:wiki-details-page', args=[page.slug]))
+            # Redirect back to detail view
+            return HttpResponseRedirect(
+                reverse('wiki:wiki-details-page', args=[page.slug])
+            )
 
 
 class PageCreateView(CreateView):
